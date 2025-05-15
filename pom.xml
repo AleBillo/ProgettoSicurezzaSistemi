@@ -10,10 +10,6 @@
  	  <sonar.host.url>https://sonarcloud.io</sonar.host.url>
 	</properties>
 	<packaging>war</packaging>
-	<properties>
-	  <sonar.organization>jaluspeet</sonar.organization>
-	  <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-	</properties>
 	<build>
 		<sourceDirectory>src/main/java</sourceDirectory>
 		<finalName>onlinebookstore</finalName>
