@@ -5,6 +5,10 @@
 	<groupId>onlinebookstore</groupId>
 	<artifactId>onlinebookstore</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<properties>
+ 	  <sonar.organization>alebillo</sonar.organization>
+ 	  <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+	</properties>
 	<packaging>war</packaging>
 	<properties>
 	  <sonar.organization>jaluspeet</sonar.organization>
