@@ -195,7 +195,8 @@ sca:
 ```
 
 ### Stage 5
-La pipeline viene automaticamente interrotta se uno dei due scan (SCA e SAST) fallisce. La causa del fallimento viene indicata nell'output del workflow di Github Actions, accessibile ad un eventuale team di sicurezza.
+La pipeline viene automaticamente interrotta se uno dei due scan (SCA e SAST) fallisce. La causa del fallimento viene indicata nell'output del workflow di Github Actions, accessibile ad un eventuale team di sicurezza. Qui sotto è riportato un esempio di esito positivo della pipeline
+![Esempio di build](images/gate.png)
 
 ### Stage 7
 Viene automaticamente notificato tramite email un eventuale team di sicurezza, sfruttando la reportistica automatizzata di Github Actions.
