@@ -15,7 +15,20 @@ Per la realizzazione della pipeline CI/CD sono stati adottati i seguenti strumen
 L’obiettivo principale è dimostrare come l'integrazione di strumenti di sicurezza nel ciclo di vita del software possa aumentare l'affidabilità e la resilienza delle applicazioni, promuovendo al contempo pratiche di sviluppo sicuro.
 
 ## Configurazione dell'ambiente di sviluppo
-Abbiamo utilizzato un container di GitHub Actions per contenere la pipeline
+* ### Step 1 (Stage 1-2-6)
+Checkout del codice cioè clonare la repository per partire dall'ultimo commit ergo dallo stato corrente.
+Avvio del servizio: Crea un secondo container con MySQL e fa partire il suo servizio.
+Setup di Java 11 e ping di MySQL e quando parte si inizializza il database con dei dati di testo.
+Build con Maven e carica l'eseguibile (Artifact) in modo da allegarlo all'output finale.
+* ### Step 2 (Stage 3)
+Effettua una scansione SAST con SonarQube per l'analisi del codice statico.
+* ### Step 3 (Stage 4)
+Effettua una scansione SCA con Dependecy Check e allega il report delle dipendenze all'output.
+
+* ### Stage 5
+Per quanto riguarda i check dei gate di sicurezza e qualità.
+* ### Stage 7
+Notifica del report integrata automaticamente con GitHub Actions.
 
 ## Analisi delle vulnerabilità trovate e soluzioni
 
