@@ -10,15 +10,15 @@ Per la realizzazione della pipeline CI/CD sono stati adottati i seguenti strumen
 * OWASP Dependency-Check per l’analisi SCA (Software Composition Analysis) delle librerie di terze parti utilizzate;
 * Quality/Security Gate configurato per bloccare la pipeline in presenza di vulnerabilità critiche o violazioni gravi delle regole di qualità;
 * Artifact archiving per il salvataggio dell’output di build (JAR file);
-* Sistema di notifica per segnalare l’esito delle analisi al team di sicurezza (via log e GitHub Actions).
+* Sistema di notifica per segnalare l’esito delle analisi al team di sicurezza (GitHub Actions).
 
 L’obiettivo principale è dimostrare come l'integrazione di strumenti di sicurezza nel ciclo di vita del software possa aumentare l'affidabilità e la resilienza delle applicazioni, promuovendo al contempo pratiche di sviluppo sicuro.
 
 ## Configurazione dell'ambiente di sviluppo
+Abbiamo utilizzato un container di GitHub Actions per contenere la pipeline
 
+## Analisi delle vulnerabilità trovate e soluzioni
 
-## Analisi delle vulnerabilità trovate
-ssjjjdjjsdjsdjdjdsjdsjsdjsdjjjsdjsdj
 
 ### Membri del gruppo:
 - Jacopo Maria Spitaleri
