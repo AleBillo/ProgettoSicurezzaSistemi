@@ -30,7 +30,7 @@ Effettua una scansione SAST con SonarQube per l'analisi statica del codice.
 Effettua una scansione SCA con Dependecy Check e allega il report delle vulnerabilità (`dependency-check-report.html`) all'output.
 
 ### Stage 5
-Per quanto riguarda i check dei gate di sicurezza e qualità.
+La pipeline viene automaticamente interrotta se uno dei due scan (SCA e SAST) fallisce. La causa del fallimento viene indicata nell'output del workflow di Github Actions, accessibile ad un eventuale team di sicurezza.
 
 ### Stage 7
 Viene automaticamente notificato tramite email un eventuale team di sicurezza, sfruttando la reportistica automatizzata di Github Actions.
