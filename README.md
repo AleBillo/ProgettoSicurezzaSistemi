@@ -1,7 +1,7 @@
 # Relazione del Progetto di "Sicurezza dei Sistemi e Privacy"
 ## introduzione
 Il presente progetto si propone di implementare un processo di sviluppo sicuro (SSDLC - Secure Software Development Life Cycle) secondo l'approccio SecDevOps, attraverso la configurazione di una pipeline CI/CD per un'applicazione sviluppata in Java.
-Il repository selezionato per l'attività è [onlinebookstore](https://github.com/shashirajraja/onlinebookstore), un progetto Java che simula un sistema di gestione per una libreria online.
+Il repository selezionato per l'attività è [onlinebookstore](https://github.com/shashirajraja/onlinebookstore), un progetto Java che simula un sistema di gestione per una libreria online..
 
 Per la realizzazione della pipeline CI/CD sono stati adottati i seguenti strumenti e tecnologie: 
 * GitHub Actions per l’automazione del processo CI/CD;
