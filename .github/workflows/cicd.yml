@@ -153,7 +153,7 @@ jobs:
         env:
           JAVA_HOME: /opt/jdk
         with:
-          project: onlinebookstore
+          project: ProgettoSicurezzaSistemi
           path: '.'
           format: HTML
           out: reports
