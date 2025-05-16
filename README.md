@@ -212,7 +212,7 @@ Netty è una libreria Java utilizzata per la programmazione di rete asincrona. L
 - Deserializzazione non sicura: Consente a un attaccante remoto di inviare oggetti Java serializzati malevoli per ottenere esecuzione di codice arbitrario.
 - Parsing HTTP vulnerabile: Errori nella gestione di header e messaggi HTTP possono portare a bypass di controlli o denial-of-service.
 
-#### Output
+#### Rilevato in
 ```yaml
 webapp-runner.jar (shaded: io.netty:netty:3.5.5.Final)	
 cpe:2.3:a:netty:netty:3.5.5:*:*:*:*:*:*:*	
@@ -248,7 +248,7 @@ Il driver JDBC PostgreSQL 42.3.7, utilizzato per la connessione al database, pre
 - CVE-2022-21724: Mancata verifica del certificato in alcune configurazioni SSL/TLS, che espone a attacchi MITM.
 - CVE-2022-31197: Potenziale informazioni sensibili esposte in ambiente failover.
 
-#### Output
+#### Rilevato in
 ```yaml
 onlinebookstore.war: postgresql-42.3.7.jar
 cpe:2.3:a:postgresql:postgresql:42.3.7:*:*:*:*:*:*:*
@@ -278,7 +278,7 @@ Aggiornare immediatamente il driver JDBC a una versione più moderna di 42.5.4 e
 #### Descrizione 
 `mysql-connector-java-8.0.28.jar` è il driver JDBC per MySQL. In questa versione sono presenti diverse vulnerabilità che compromettono autenticazione, stabilità e gestione delle connessioni. Alcuni difetti sono legati alla gestione errata di pacchetti di handshake, che possono essere sfruttati per causare denial-of-service, memory leak, o potenziali escalation in caso di configurazioni deboli.
 
-#### Output
+#### Rilevato in
 ```yaml
 mysql-connector-java-8.0.28.jar
 cpe:2.3:a:mysql:mysql:8.0.28:*:*:*:*:*:*:*
@@ -309,7 +309,7 @@ Aggiornare il driver JDBC alla versione 8.0.33 o successiva ed evitare configura
 #### Descrizione 
 Protobuf è una libreria per la serializzazione efficiente di dati. La versione 3.11.4 presenta falle nella gestione della deserializzazione binaria, che possono portare a execution of untrusted data, buffer overflow o DoS. In contesti con input non controllato il rischio è elevato.
 
-#### Output
+#### Rilevato in
 ```yaml
 protobuf-java-3.11.4.jar
 cpe:2.3:a:google:protobuf-java:3.11.4:*:*:*:*:*:*:*
@@ -338,7 +338,7 @@ Aggiornare a Protobuf Java 3.21.x o superiore e Validare sempre input e lunghezz
 #### Descrizione 
 Jettison è una libreria che converte JSON in XML e viceversa. La versione 1.1 contiene vulnerabilità note che permettono attacchi di tipo XML External Entity e XML Injection, sfruttabili quando l’input XML non è adeguatamente sanificato.
 
-#### Output
+#### Rilevato in
 ```yaml
 webapp-runner.jar (shaded: org.codehaus.jettison:jettison:1.1)
 cpe:2.3:a:jettison_project:jettison:1.1:*:*:*:*:*:*:*
@@ -368,7 +368,7 @@ Aggiornare jettison alla versione 1.4.1 o superiore, evitare l’uso diretto di 
 #### Descrizione 
 `commons-io:commons-io:2.3` è una libreria Apache per operazioni su file e stream. La versione 2.3 è affetta da vulnerabilità che consentono, in certi casi, di accedere a file arbitrari su disco tramite percorsi relativi manipolati o path traversal. È pericolosa se un'applicazione accetta input da utenti per caricare o scrivere file.
 
-#### Output
+#### Rilevato in
 ```yaml
 webapp-runner.jar (shaded: commons-io:commons-io:2.3)
 cpe:2.3:a:apache:commons_io:2.3:*:*:*:*:*:*:*
@@ -395,7 +395,7 @@ Validare con whitelist i nomi file ricevuti dall’utente oppure usare metodi co
 #### Descrizione 
 `javax.servlet-api:3.1.0` è la specifica Servlet Java usata nei container web. Pur non contenendo codice eseguibile direttamente dato che è una API, è obsoleta e può implicare incompatibilità con container sicuri o mancare di patch su parsing.
 
-#### Output
+#### Rilevato in
 ```yaml
 javax.servlet-api-3.1.0.jar
 cpe:2.3:a:oracle:java_se:3.1.0:*:*:*:*:*:*:*
@@ -422,7 +422,7 @@ Verificare compatibilità con il server di applicazione usato.
 #### Descrizione 
 webapp-runner è un tool che permette di eseguire webapp .war standalone. Internamente usa una versione embedded di Tomcat 8, che è non più supportata da Apache dal 2016. Espone l’app a diverse CVE legate a parsing di cookie, header, e gestione delle sessioni.
 
-#### Output
+#### Rilevato in
 ```yaml
 webapp-runner.jar
 pkg:maven/com.github.jsimone/webapp-runner@8.0.30.2
@@ -449,7 +449,7 @@ Aggiornare webapp-runner con una versione aggiornata compatibile con Tomcat 9.0+
 #### Descrizione 
 commons-codec:1.5 è una libreria per codifiche come Base64, SHA, MD5. Questa versione implementa confronti di stringhe/digest in modo non costante nel tempo, rendendoli soggetti a timing attacks su token o password hash confrontate lato server.
 
-#### Output
+#### Rilevato in
 ```yaml
 webapp-runner.jar (shaded: commons-codec:commons-codec:1.5)
 pkg:maven/commons-codec/commons-codec@1.5
@@ -473,7 +473,7 @@ Aggiornare a commons-codec 1.15 o superiore e per confronti sicuri, usare metodi
 #### Descrizione 
 org.apache.httpcomponents:httpcore-nio:4.3 è parte della libreria HTTP async di Apache. Questa versione contiene bug noti che possono causare resource exhaustion o gestione errata di header HTTP. Sfruttabile tramite richieste malformate o flood.
 
-#### Output
+#### Rilevato in
 ```yaml
 webapp-runner.jar (shaded: org.apache.httpcomponents:httpcore-nio:4.3)
 pkg:maven/org.apache.httpcomponents/httpcore-nio@4.3
