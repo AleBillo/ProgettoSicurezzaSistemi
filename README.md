@@ -206,7 +206,7 @@ Le scansioni automatiche integrate nella CI/CD pipeline hanno evidenziato la pre
 
 ![Summary](images/vulnerabilità.PNG)
 
-**1. Netty 3.5.5.Final**
+### 1. Netty 3.5.5.Final
 #### Descrizione 
 Netty è una libreria Java utilizzata per la programmazione di rete asincrona. La versione 3.5.5.Final, integrata tramite webapp-runner.jar, contiene più vulnerabilità note e non più supportate. Le vulnerabilità più gravi riguardano:
 - Deserializzazione non sicura: Consente a un attaccante remoto di inviare oggetti Java serializzati malevoli per ottenere esecuzione di codice arbitrario.
@@ -238,8 +238,11 @@ Impatto potenziale:
 
 - Accesso non autorizzato
 
+#### Fix del Codice
+Rimozione o sostituzione del pacchetto webapp-runner.jar con uno strumento moderno e aggiornato.
 
-**2. PostgreSQL JDBC Driver 42.3.7**
+
+### 2. PostgreSQL JDBC Driver 42.3.7
 #### Descrizione 
 Il driver JDBC PostgreSQL 42.3.7, utilizzato per la connessione al database, presenta vulnerabilità che compromettono la sicurezza della comunicazione e la gestione del failover. In particolare:
 - CVE-2022-21724: Mancata verifica del certificato in alcune configurazioni SSL/TLS, che espone a attacchi MITM.
@@ -268,8 +271,10 @@ Impatto potenziale:
 
 - Perdita di integrità del canale di comunicazione
 
+#### Fix del Codice
+Aggiornare immediatamente il driver JDBC a una versione più moderna di 42.5.4 e rimuovere ogni versione duplicata del driver dallo .war.
 
-**3. MySQL Connector**
+### 3. MySQL Connector
 #### Descrizione 
 mysql-connector-java-8.0.28.jar è il driver JDBC per MySQL. In questa versione sono presenti diverse vulnerabilità che compromettono autenticazione, stabilità e gestione delle connessioni. Alcuni difetti sono legati alla gestione errata di pacchetti di handshake, che possono essere sfruttati per causare denial-of-service, memory leak, o potenziali escalation in caso di configurazioni deboli.
 
@@ -296,9 +301,201 @@ Impatto potenziale:
 
 - Problemi di compatibilità TLS
 
+#### Fix del Codice
+Aggiornare il driver JDBC alla versione 8.0.33 o successiva ed evitare configurazioni deboli come useSSL=false.
+
+
+### 4. Protobuf Java 3.11.4
+#### Descrizione 
+Protobuf è una libreria per la serializzazione efficiente di dati. La versione 3.11.4 presenta falle nella gestione della deserializzazione binaria, che possono portare a execution of untrusted data, buffer overflow o DoS. In contesti con input non controllato il rischio è elevato.
+
+#### Output
+```yaml
+protobuf-java-3.11.4.jar
+cpe:2.3:a:google:protobuf-java:3.11.4:*:*:*:*:*:*:*
+```
+#### Classificazione OWASP TOP 10
+A03:2021 – Injection
+
+A08:2021 – Software and Data Integrity Failures
+
+#### Gravità e Impatti
+- Gravità: ALTA
+
+Impatto potenziale:
+
+- Stack overflow e quindi Denial of Service
+
+- Deserializzazione pericolosa da fonti non affidabili
+
+- Potenziale esecuzione non voluta di codice
 
 #### Fix del Codice
-Aggiornare il driver JDBC alla versione 8.0.33 o successiva ed Evitare configurazioni deboli come 'useSSL=false.'
+Aggiornare a Protobuf Java 3.21.x o superiore e Validare sempre input e lunghezza dei messaggi ricevuti.
+
+
+### 5. Jettison 1.1
+#### Descrizione 
+Jettison è una libreria che converte JSON in XML e viceversa. La versione 1.1 contiene vulnerabilità note che permettono attacchi di tipo XML External Entity e XML Injection, sfruttabili quando l’input XML non è adeguatamente sanificato.
+
+#### Output
+```yaml
+webapp-runner.jar (shaded: org.codehaus.jettison:jettison:1.1)
+cpe:2.3:a:jettison_project:jettison:1.1:*:*:*:*:*:*:*
+```
+#### Classificazione OWASP TOP 10
+A05:2021 – Security Misconfiguration
+
+A06:2021 – Vulnerable and Outdated Components
+
+#### Gravità e Impatti
+- Gravità: ALTA
+
+Impatto potenziale:
+
+- Lettura di file locali sul server (XXE)
+
+- Esecuzione di richieste verso host interni (SSRF)
+
+- Possibile injection nei messaggi XML
+
+#### Fix del Codice
+Aggiornare a Protobuf Java 3.21.x o superiore e Validare sempre input e lunghezza dei messaggi ricevuti.
+
+
+### 6. Commons IO 2.3
+#### Descrizione 
+commons-io:commons-io:2.3 è una libreria Apache per operazioni su file e stream. La versione 2.3 è affetta da vulnerabilità che consentono, in certi casi, di accedere a file arbitrari su disco tramite percorsi relativi manipolati o path traversal. È pericolosa se un'applicazione accetta input da utenti per caricare o scrivere file.
+
+#### Output
+```yaml
+webapp-runner.jar (shaded: commons-io:commons-io:2.3)
+cpe:2.3:a:apache:commons_io:2.3:*:*:*:*:*:*:*
+```
+#### Classificazione OWASP TOP 10
+A05:2021 – Security Misconfiguration
+
+A01:2021 – Broken Access Control
+
+#### Gravità e Impatti
+- Gravità: MEDIA
+
+Impatto potenziale:
+
+- Possibile lettura di file sensibili fuori directory
+
+- Rischio incrementato se combinato con upload o gestione file da parte di utenti
+
+#### Fix del Codice
+Validare con whitelist i nomi file ricevuti dall’utente oppure usare metodi come new File(baseDir, safeFileName).getCanonicalPath() per evitare accessi relativi.
+
+
+### 7. javax.servlet-api 3.1.0
+#### Descrizione 
+javax.servlet-api:3.1.0 è la specifica Servlet Java usata nei container web. Pur non contenendo codice eseguibile direttamente dato che è una API, è obsoleta e può implicare incompatibilità con container sicuri o mancare di patch su parsing.
+
+#### Output
+```yaml
+javax.servlet-api-3.1.0.jar
+cpe:2.3:a:oracle:java_se:3.1.0:*:*:*:*:*:*:*
+```
+#### Classificazione OWASP TOP 10
+A09:2021 – Security Logging and Monitoring Failures
+
+A06:2021 – Vulnerable and Outdated Components
+
+#### Gravità e Impatti
+- Gravità: MEDIA
+
+Impatto potenziale:
+
+- Potenziali incompatibilità con patch di sicurezza moderne
+
+- Debolezze non direttamente sfruttabili ma sfruttabili via container vulnerabili
+
+#### Fix del Codice
+Verificare compatibilità con il server di applicazione usato.
+
+
+### 8. webapp-runner 8.0.30.2
+#### Descrizione 
+webapp-runner è un tool che permette di eseguire webapp .war standalone. Internamente usa una versione embedded di Tomcat 8, che è non più supportata da Apache dal 2016. Espone l’app a diverse CVE legate a parsing di cookie, header, e gestione delle sessioni.
+
+#### Output
+```yaml
+webapp-runner.jar
+pkg:maven/com.github.jsimone/webapp-runner@8.0.30.2
+```
+#### Classificazione OWASP TOP 10
+A06:2021 – Vulnerable and Outdated Components
+
+A05:2021 – Security Misconfiguration
+
+#### Gravità e Impatti
+- Gravità: MEDIA
+
+Impatto potenziale:
+
+- CVE-2016-0763 – session fixation
+
+- CVE-2016-5018 – malformed request parsing bypass
+
+#### Fix del Codice
+Aggiornare webapp-runner con una versione aggiornata compatibile con Tomcat 9.0+ oppure valutare se usare una distribuzione standard di Tomcat esterna.
+
+
+### 9. commons-codec 1.5
+#### Descrizione 
+commons-codec:1.5 è una libreria per codifiche come Base64, SHA, MD5. Questa versione implementa confronti di stringhe/digest in modo non costante nel tempo, rendendoli soggetti a timing attacks su token o password hash confrontate lato server.
+
+#### Output
+```yaml
+webapp-runner.jar (shaded: commons-codec:commons-codec:1.5)
+pkg:maven/commons-codec/commons-codec@1.5
+```
+#### Classificazione OWASP TOP 10
+A02:2021 – Cryptographic Failures
+
+#### Gravità e Impatti
+- Gravità: MEDIA
+
+Impatto potenziale:
+
+- Rischio di ricostruzione di hash da parte di un attaccante via analisi tempi di risposta
+
+- Impatta servizi che confrontano digest o token sensibili
+  
+#### Fix del Codice
+Aggiornare a commons-codec 1.15 o superiore e per confronti sicuri, usare metodi "constant-time".
+
+### 10. httpcore-nio 4.3
+#### Descrizione 
+org.apache.httpcomponents:httpcore-nio:4.3 è parte della libreria HTTP async di Apache. Questa versione contiene bug noti che possono causare resource exhaustion o gestione errata di header HTTP. Sfruttabile tramite richieste malformate o flood.
+
+#### Output
+```yaml
+webapp-runner.jar (shaded: org.apache.httpcomponents:httpcore-nio:4.3)
+pkg:maven/org.apache.httpcomponents/httpcore-nio@4.3
+```
+#### Classificazione OWASP TOP 10
+A01:2021 – Broken Access Control
+
+A03:2021 – Injection
+
+#### Gravità e Impatti
+- Gravità: MEDIA
+
+Impatto potenziale:
+
+- Nessuna CVE direttamente segnalata, ma noto come obsoleto e vulnerabile
+
+- DoS tramite occupazione thread in richieste keep-alive
+
+- Errori nella gestione header → spoofing o injection
+
+#### Fix del Codice
+Aggiornare a httpcore-nio 4.4.15 o superiore e impostare correttamente timeout e gestione di input buffer nei server HTTP.
+
 
 ### Membri del gruppo:
 - Jacopo Maria Spitaleri
