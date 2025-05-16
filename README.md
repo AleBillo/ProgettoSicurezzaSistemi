@@ -203,10 +203,11 @@ Viene automaticamente notificato tramite email un eventuale team di sicurezza, s
 
 ## Analisi delle vulnerabilità trovate
 Le scansioni automatiche integrate nella CI/CD pipeline hanno evidenziato la presenza di diverse dipendenze vulnerabili all’interno del progetto. Di seguito viene riportata l’analisi dettagliata vulnerabilità che richiedono intervento immediato.
+
 ![Summary](images/vulnerabilità.PNG)
 
 **1. Netty 3.5.5.Final**
-   #### Descrizione 
+#### Descrizione 
 Netty è una libreria Java utilizzata per la programmazione di rete asincrona. La versione 3.5.5.Final, integrata tramite webapp-runner.jar, contiene più vulnerabilità note e non più supportate. Le vulnerabilità più gravi riguardano:
 - Deserializzazione non sicura: Consente a un attaccante remoto di inviare oggetti Java serializzati malevoli per ottenere esecuzione di codice arbitrario.
 - Parsing HTTP vulnerabile: Errori nella gestione di header e messaggi HTTP possono portare a bypass di controlli o denial-of-service.
@@ -237,10 +238,11 @@ Impatto potenziale:
 
 - Accesso non autorizzato
 
+
 **2. PostgreSQL JDBC Driver 42.3.7**
-   #### Descrizione 
+#### Descrizione 
 Il driver JDBC PostgreSQL 42.3.7, utilizzato per la connessione al database, presenta vulnerabilità che compromettono la sicurezza della comunicazione e la gestione del failover. In particolare:
-- CVE-2022-21724: Mancata verifica del certificato in alcune configurazioni SSL/TLS, che espone a attacchi man-in-the-middle (MITM).
+- CVE-2022-21724: Mancata verifica del certificato in alcune configurazioni SSL/TLS, che espone a attacchi MITM.
 - CVE-2022-31197: Potenziale informazioni sensibili esposte in ambiente failover.
 
 #### Output
@@ -251,7 +253,7 @@ cpe:2.3:a:postgresql:postgresql:42.3.7:*:*:*:*:*:*:*
 #### Classificazione OWASP TOP 10
 A02:2021 – Cryptographic Failures
 
-A01:2021 – Broken Access Control (in contesti multi-tenant o DB remoti)
+A01:2021 – Broken Access Control 
 
 A05:2021 – Security Misconfiguration
 
@@ -267,8 +269,36 @@ Impatto potenziale:
 - Perdita di integrità del canale di comunicazione
 
 
+**3. MySQL Connector**
+#### Descrizione 
+mysql-connector-java-8.0.28.jar è il driver JDBC per MySQL. In questa versione sono presenti diverse vulnerabilità che compromettono autenticazione, stabilità e gestione delle connessioni. Alcuni difetti sono legati alla gestione errata di pacchetti di handshake, che possono essere sfruttati per causare denial-of-service, memory leak, o potenziali escalation in caso di configurazioni deboli.
+
+#### Output
+```yaml
+mysql-connector-java-8.0.28.jar
+cpe:2.3:a:mysql:mysql:8.0.28:*:*:*:*:*:*:*
+```
+#### Classificazione OWASP TOP 10
+A01:2021 – Broken Access Control
+
+A09:2021 – Security Logging and Monitoring Failures
+
+A07:2021 – Identification and Authentication Failures
+
+#### Gravità e Impatti
+- Gravità: ALTA
+
+Impatto potenziale:
+
+- Possibili crash dell’applicazione in ambienti ad alto carico
+
+- Errori di autenticazione/connessione
+
+- Problemi di compatibilità TLS
+
+
 #### Fix del Codice
-Aggiornare immediatamente il driver JDBC a una versione maggior a 42.5.4
+Aggiornare il driver JDBC alla versione 8.0.33 o successiva ed Evitare configurazioni deboli come 'useSSL=false.'
 
 ### Membri del gruppo:
 - Jacopo Maria Spitaleri
