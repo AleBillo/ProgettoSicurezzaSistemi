@@ -203,7 +203,7 @@ Viene automaticamente notificato tramite email un eventuale team di sicurezza, s
 
 ## Analisi delle vulnerabilità trovate
 Le scansioni automatiche integrate nella CI/CD pipeline hanno evidenziato la presenza di diverse dipendenze vulnerabili all’interno del progetto. Di seguito viene riportata l’analisi dettagliata vulnerabilità che richiedono intervento immediato.
-![Summary](images/vulnerabilità.png)
+![Summary](images/vulnerabilità.PNG)
 
 **1. Netty 3.5.5.Final**
    #### Descrizione 
