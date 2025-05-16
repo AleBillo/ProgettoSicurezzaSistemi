@@ -201,8 +201,44 @@ La pipeline viene automaticamente interrotta se uno dei due scan (SCA e SAST) fa
 ### Stage 7
 Viene automaticamente notificato tramite email un eventuale team di sicurezza, sfruttando la reportistica automatizzata di Github Actions.
 
-## Analisi delle vulnerabilità trovate e soluzioni
+## Analisi delle vulnerabilità trovate
+Le scansioni automatiche integrate nella CI/CD pipeline hanno evidenziato la presenza di diverse dipendenze vulnerabili all’interno del progetto. Di seguito viene riportata l’analisi dettagliata vulnerabilità che richiedono intervento immediato.
+![Summary](images/vulnerabilità.png)
 
+**1. Netty 3.5.5.Final**
+   #### Descrizione 
+Netty è una libreria Java utilizzata per la programmazione di rete asincrona. La versione 3.5.5.Final, integrata tramite webapp-runner.jar, contiene più vulnerabilità note e non più supportate. Le vulnerabilità più gravi riguardano:
+- Deserializzazione non sicura: Consente a un attaccante remoto di inviare oggetti Java serializzati malevoli per ottenere esecuzione di codice arbitrario.
+- Parsing HTTP vulnerabile: Errori nella gestione di header e messaggi HTTP possono portare a bypass di controlli o denial-of-service.
+
+#### Output
+```yaml
+webapp-runner.jar (shaded: io.netty:netty:3.5.5.Final)	
+cpe:2.3:a:netty:netty:3.5.5:*:*:*:*:*:*:*	
+pkg:maven/io.netty/netty@3.5.5.Final	
+```
+#### Classificazione OWASP TOP 10
+A08:2021 – Software and Data Integrity Failures
+
+A05:2021 – Security Misconfiguration
+
+A03:2021 – Injection (via unsafe deserialization)
+
+#### Gravità e Impatti
+- Gravità: CRITICA
+
+Impatto potenziale:
+
+- Esecuzione di codice arbitrario (RCE)
+
+- Compromissione del server
+
+- Denial-of-service
+
+- Accesso non autorizzato
+
+#### Fix del Codice
+Rimozione o sostituzione del pacchetto webapp-runner.jar con uno strumento moderno e aggiornato.
 
 ### Membri del gruppo:
 - Jacopo Maria Spitaleri
