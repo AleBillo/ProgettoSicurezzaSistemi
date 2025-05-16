@@ -208,7 +208,7 @@ Le scansioni automatiche integrate nella CI/CD pipeline hanno evidenziato la pre
 
 ### 1. Netty 3.5.5.Final
 #### Descrizione 
-Netty è una libreria Java utilizzata per la programmazione di rete asincrona. La versione 3.5.5.Final, integrata tramite webapp-runner.jar, contiene più vulnerabilità note e non più supportate. Le vulnerabilità più gravi riguardano:
+Netty è una libreria Java utilizzata per la programmazione di rete asincrona. La versione 3.5.5.Final, integrata tramite `webapp-runner.jar`, contiene più vulnerabilità note e non più supportate. Le vulnerabilità più gravi riguardano:
 - Deserializzazione non sicura: Consente a un attaccante remoto di inviare oggetti Java serializzati malevoli per ottenere esecuzione di codice arbitrario.
 - Parsing HTTP vulnerabile: Errori nella gestione di header e messaggi HTTP possono portare a bypass di controlli o denial-of-service.
 
@@ -239,7 +239,7 @@ Impatto potenziale:
 - Accesso non autorizzato
 
 #### Fix del Codice
-Rimozione o sostituzione del pacchetto webapp-runner.jar con uno strumento moderno e aggiornato.
+Rimozione o sostituzione del pacchetto `webapp-runner.jar` con uno strumento moderno e aggiornato.
 
 
 ### 2. PostgreSQL JDBC Driver 42.3.7
@@ -272,11 +272,11 @@ Impatto potenziale:
 - Perdita di integrità del canale di comunicazione
 
 #### Fix del Codice
-Aggiornare immediatamente il driver JDBC a una versione più moderna di 42.5.4 e rimuovere ogni versione duplicata del driver dallo .war.
+Aggiornare immediatamente il driver JDBC a una versione più moderna di 42.5.4 e rimuovere ogni versione duplicata del driver dallo `.war`.
 
 ### 3. MySQL Connector
 #### Descrizione 
-mysql-connector-java-8.0.28.jar è il driver JDBC per MySQL. In questa versione sono presenti diverse vulnerabilità che compromettono autenticazione, stabilità e gestione delle connessioni. Alcuni difetti sono legati alla gestione errata di pacchetti di handshake, che possono essere sfruttati per causare denial-of-service, memory leak, o potenziali escalation in caso di configurazioni deboli.
+`mysql-connector-java-8.0.28.jar` è il driver JDBC per MySQL. In questa versione sono presenti diverse vulnerabilità che compromettono autenticazione, stabilità e gestione delle connessioni. Alcuni difetti sono legati alla gestione errata di pacchetti di handshake, che possono essere sfruttati per causare denial-of-service, memory leak, o potenziali escalation in caso di configurazioni deboli.
 
 #### Output
 ```yaml
@@ -302,7 +302,7 @@ Impatto potenziale:
 - Problemi di compatibilità TLS
 
 #### Fix del Codice
-Aggiornare il driver JDBC alla versione 8.0.33 o successiva ed evitare configurazioni deboli come useSSL=false.
+Aggiornare il driver JDBC alla versione 8.0.33 o successiva ed evitare configurazioni deboli come `useSSL=false`.
 
 
 ### 4. Protobuf Java 3.11.4
@@ -360,12 +360,13 @@ Impatto potenziale:
 - Possibile injection nei messaggi XML
 
 #### Fix del Codice
-Aggiornare a Protobuf Java 3.21.x o superiore e Validare sempre input e lunghezza dei messaggi ricevuti.
+Aggiornare jettison alla versione 1.4.1 o superiore, evitare l’uso diretto di new `JSONObject(xmlString)` su input non controllato ed impostare parser XML in modalità sicura.
+
 
 
 ### 6. Commons IO 2.3
 #### Descrizione 
-commons-io:commons-io:2.3 è una libreria Apache per operazioni su file e stream. La versione 2.3 è affetta da vulnerabilità che consentono, in certi casi, di accedere a file arbitrari su disco tramite percorsi relativi manipolati o path traversal. È pericolosa se un'applicazione accetta input da utenti per caricare o scrivere file.
+`commons-io:commons-io:2.3` è una libreria Apache per operazioni su file e stream. La versione 2.3 è affetta da vulnerabilità che consentono, in certi casi, di accedere a file arbitrari su disco tramite percorsi relativi manipolati o path traversal. È pericolosa se un'applicazione accetta input da utenti per caricare o scrivere file.
 
 #### Output
 ```yaml
@@ -387,12 +388,12 @@ Impatto potenziale:
 - Rischio incrementato se combinato con upload o gestione file da parte di utenti
 
 #### Fix del Codice
-Validare con whitelist i nomi file ricevuti dall’utente oppure usare metodi come new File(baseDir, safeFileName).getCanonicalPath() per evitare accessi relativi.
+Validare con whitelist i nomi file ricevuti dall’utente oppure usare metodi come `new File(baseDir, safeFileName).getCanonicalPath()` per evitare accessi relativi.
 
 
 ### 7. javax.servlet-api 3.1.0
 #### Descrizione 
-javax.servlet-api:3.1.0 è la specifica Servlet Java usata nei container web. Pur non contenendo codice eseguibile direttamente dato che è una API, è obsoleta e può implicare incompatibilità con container sicuri o mancare di patch su parsing.
+`javax.servlet-api:3.1.0` è la specifica Servlet Java usata nei container web. Pur non contenendo codice eseguibile direttamente dato che è una API, è obsoleta e può implicare incompatibilità con container sicuri o mancare di patch su parsing.
 
 #### Output
 ```yaml
