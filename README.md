@@ -16,7 +16,7 @@ L’obiettivo principale è dimostrare come l'integrazione di strumenti di sicur
 
 ## Configurazione dell'ambiente di sviluppo
 
-### Step 1 (Stage 1-2-6)
+### Stage 1-2-6
 - Checkout del codice - viene clonato l'ultimo commit del repository, su cui lavora la pipeline
   ```yaml
   checkout:
@@ -120,7 +120,7 @@ services:
           path: target/*.war
 ```
 
-### Step 2 (Stage 3)
+### Stage 3
 Effettua una scansione SAST con SonarQube per l'analisi statica del codice.
 ```yaml
  sast:
@@ -159,7 +159,7 @@ Effettua una scansione SAST con SonarQube per l'analisi statica del codice.
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=jaluspeet_onlinebookstore
 ```
 
-### Step 3 (Stage 4)
+### Stage 4
 Effettua una scansione SCA con Dependecy Check e allega il report delle vulnerabilità (`dependency-check-report.html`) all'output.
 ```yaml
 sca:
@@ -237,8 +237,38 @@ Impatto potenziale:
 
 - Accesso non autorizzato
 
+**2. PostgreSQL JDBC Driver 42.3.7**
+   #### Descrizione 
+Il driver JDBC PostgreSQL 42.3.7, utilizzato per la connessione al database, presenta vulnerabilità che compromettono la sicurezza della comunicazione e la gestione del failover. In particolare:
+- CVE-2022-21724: Mancata verifica del certificato in alcune configurazioni SSL/TLS, che espone a attacchi man-in-the-middle (MITM).
+- CVE-2022-31197: Potenziale informazioni sensibili esposte in ambiente failover.
+
+#### Output
+```yaml
+onlinebookstore.war: postgresql-42.3.7.jar
+cpe:2.3:a:postgresql:postgresql:42.3.7:*:*:*:*:*:*:*
+```
+#### Classificazione OWASP TOP 10
+A02:2021 – Cryptographic Failures
+
+A01:2021 – Broken Access Control (in contesti multi-tenant o DB remoti)
+
+A05:2021 – Security Misconfiguration
+
+#### Gravità e Impatti
+- Gravità: CRITICA
+
+Impatto potenziale:
+
+- Compromissione della confidenzialità dei dati
+
+- Attacchi MITM tra applicazione e database
+
+- Perdita di integrità del canale di comunicazione
+
+
 #### Fix del Codice
-Rimozione o sostituzione del pacchetto webapp-runner.jar con uno strumento moderno e aggiornato.
+Aggiornare immediatamente il driver JDBC a una versione maggior a 42.5.4
 
 ### Membri del gruppo:
 - Jacopo Maria Spitaleri
