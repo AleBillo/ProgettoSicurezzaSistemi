@@ -88,11 +88,11 @@ jobs:
 
       - name: Build with Maven
         run: mvn clean install -B
-
-      - name: Upload build artifact
+        
+      - name: Upload unverified build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: java-build-artifact
+          name: unverified-java-build-artifact
           path: |
             target/
             pom.xml
@@ -127,16 +127,10 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
 
-      - name: Download build artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: java-build-artifact
-          path: .
-
       - name: Run SonarQube Scanner
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: mvn -B org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=AleBillo_ProgettoSicurezzaSistemi
+        run: mvn -B verify sonar:sonar -Dsonar.projectKey=AleBillo_ProgettoSicurezzaSistemi -Dsonar.qualitygate.wait=true -DskipTests
 
   sca:
     name: Software Composition Analysis (SCA)
@@ -146,17 +140,24 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Download build artifact
-        uses: actions/download-artifact@v4
+      - name: Set up JDK 17 (Temurin)
+        uses: actions/setup-java@v3
         with:
-          name: java-build-artifact
-          path: .
+          java-version: 17
+          distribution: temurin
+      
+      - name: Cache Maven packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      - name: Build with Maven
+        run: mvn -B package -DskipTests
 
       - name: Run Dependency Check
         uses: dependency-check/Dependency-Check_Action@main
-        continue-on-error: true
-        env:
-          JAVA_HOME: /opt/jdk
         with:
           project: onlinebookstore
           path: '.'
@@ -171,3 +172,22 @@ jobs:
         with:
           name: Dependency-Check-Report
           path: reports
+          
+  package:
+    name: Package Verified Artifact
+    runs-on: ubuntu-latest
+    needs: [sast, sca]
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: unverified-java-build-artifact
+          path: .
+          
+      - name: Upload verified build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: verified-java-build-artifact
+          path: |
+            target/
+            pom.xml
