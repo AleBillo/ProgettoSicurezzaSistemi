@@ -142,16 +142,18 @@ jobs:
       - name: SonarQube report (link to dashboard)
         if: always()
         run: |
-          echo "Project: AleBillo_ProgettoSicurezzaSistemi" >> sonarqube-link.txt
-          echo "Dashboard URL: https://sonarcloud.io/dashboard?id=AleBillo_ProgettoSicurezzaSistemi" >> sonarqube-link.txt
-          echo "Generated: 2025-06-21 15:34:03 UTC" >> sonarqube-link.txt
+          mvn -B verify sonar:sonar -Dsonar.projectKey=AleBillo_ProgettoSicurezzaSistemi -Dsonar.qualitygate.wait=true -DskipTests || export SONAR_EXIT_CODE=$?
+          mkdir -p target/sonar
+          if [ ! -z "$SONAR_EXIT_CODE" ]; then
+            exit $SONAR_EXIT_CODE
+          fi
 
-      - name: Upload SonarQube dashboard link
+      - name: Upload SonarQube Report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: SonarQube-Dashboard-Link
-          path: sonarqube-link.txt
+          name: SonarQube-Report
+          path: target/sonar/
 
   sca:
     name: Software Composition Analysis (SCA)
