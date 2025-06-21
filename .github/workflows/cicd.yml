@@ -139,12 +139,12 @@ jobs:
             exit $SONAR_EXIT_CODE
           fi
 
-      - name: Upload SonarQube Report
+      - name: SonarQube report (link to dashboard)
         if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: SonarQube-Report
-          path: target/sonar/
+        run: |
+          echo "Project: AleBillo_ProgettoSicurezzaSistemi" >> sonarqube-link.txt
+          echo "Dashboard URL: https://sonarcloud.io/dashboard?id=AleBillo_ProgettoSicurezzaSistemi" >> sonarqube-link.txt
+          echo "Generated: 2025-06-21 15:34:03 UTC" >> sonarqube-link.txt
 
   sca:
     name: Software Composition Analysis (SCA)
