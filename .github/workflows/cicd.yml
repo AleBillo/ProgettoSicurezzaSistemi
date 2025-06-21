@@ -130,6 +130,7 @@ jobs:
       - name: Run SonarQube Scanner
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          JAVA_HOME: /opt/jdk
         run: mvn -B verify sonar:sonar -Dsonar.projectKey=AleBillo_ProgettoSicurezzaSistemi -Dsonar.qualitygate.wait=true -DskipTests
 
   sca:
@@ -158,6 +159,8 @@ jobs:
 
       - name: Run Dependency Check
         uses: dependency-check/Dependency-Check_Action@main
+        env:
+          JAVA_HOME: /opt/jdk
         with:
           project: onlinebookstore
           path: '.'
