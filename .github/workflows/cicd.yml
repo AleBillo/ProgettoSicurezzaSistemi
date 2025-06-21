@@ -146,6 +146,13 @@ jobs:
           echo "Dashboard URL: https://sonarcloud.io/dashboard?id=AleBillo_ProgettoSicurezzaSistemi" >> sonarqube-link.txt
           echo "Generated: 2025-06-21 15:34:03 UTC" >> sonarqube-link.txt
 
+      - name: Upload SonarQube dashboard link
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: SonarQube-Dashboard-Link
+          path: sonarqube-link.txt
+
   sca:
     name: Software Composition Analysis (SCA)
     runs-on: ubuntu-latest
