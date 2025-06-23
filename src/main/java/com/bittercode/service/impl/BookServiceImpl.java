@@ -39,14 +39,18 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book getBookById(String bookId) throws StoreException {
-        Book book = null;
-        Connection con = DBUtil.getConnection();
-        try {
-            PreparedStatement ps = con.prepareStatement(getBookByIdQuery);
-            ps.setString(1, bookId);
-            ResultSet rs = ps.executeQuery();
+    Book book = null;
+    Connection con = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
 
-            while (rs.next()) {
+    try {
+        con = DBUtil.getConnection();
+        ps = con.prepareStatement(getBookByIdQuery);
+        ps.setString(1, bookId);
+        rs = ps.executeQuery();
+
+       while (rs.next()) {
                 String bCode = rs.getString(1);
                 String bName = rs.getString(2);
                 String bAuthor = rs.getString(3);
@@ -55,11 +59,17 @@ public class BookServiceImpl implements BookService {
 
                 book = new Book(bCode, bName, bAuthor, bPrice, bQty);
             }
-        } catch (SQLException e) {
-
-        }
-        return book;
+    } catch (SQLException e) {
+        throw new StoreException("Errore durante il recupero del libro", e);
+    } finally {
+        try { if (rs != null) rs.close(); } catch (SQLException ignored) {}
+        try { if (ps != null) ps.close(); } catch (SQLException ignored) {}
+        try { if (con != null) con.close(); } catch (SQLException ignored) {}
     }
+
+    return book;
+    }
+
 
     @Override
     public List<Book> getAllBooks() throws StoreException {
