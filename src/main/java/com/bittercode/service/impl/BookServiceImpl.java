@@ -64,131 +64,142 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<Book> getAllBooks() throws StoreException {
-        List<Book> books = new ArrayList<Book>();
-        Connection con = DBUtil.getConnection();
+    List<Book> books = new ArrayList<>();
 
-        try {
-            PreparedStatement ps = con.prepareStatement(getAllBooksQuery);
-            ResultSet rs = ps.executeQuery();
+    try (Connection con = DBUtil.getConnection();
+         PreparedStatement ps = con.prepareStatement(getAllBooksQuery);
+         ResultSet rs = ps.executeQuery()) {
 
-            while (rs.next()) {
-                String bCode = rs.getString(1);
-                String bName = rs.getString(2);
-                String bAuthor = rs.getString(3);
-                int bPrice = rs.getInt(4);
-                int bQty = rs.getInt(5);
+        while (rs.next()) {
+            String bCode = rs.getString(1);
+            String bName = rs.getString(2);
+            String bAuthor = rs.getString(3);
+            int bPrice = rs.getInt(4);
+            int bQty = rs.getInt(5);
 
-                Book book = new Book(bCode, bName, bAuthor, bPrice, bQty);
-                books.add(book);
-            }
-        } catch (SQLException e) {
-
+            Book book = new Book(bCode, bName, bAuthor, bPrice, bQty);
+            books.add(book);
         }
-        return books;
+    } catch (SQLException e) {
+      
     }
+
+    return books;
+    }   
 
     @Override
     public String deleteBookById(String bookId) throws StoreException {
-        String response = ResponseCode.FAILURE.name();
-        Connection con = DBUtil.getConnection();
-        try {
-            PreparedStatement ps = con.prepareStatement(deleteBookByIdQuery);
-            ps.setString(1, bookId);
-            int k = ps.executeUpdate();
-            if (k == 1) {
-                response = ResponseCode.SUCCESS.name();
-            }
-        } catch (Exception e) {
-            response += " : " + e.getMessage();
-            e.printStackTrace();
+    String response = ResponseCode.FAILURE.name();
+    try (Connection con = DBUtil.getConnection();
+         PreparedStatement ps = con.prepareStatement(deleteBookByIdQuery)) {
+         
+        ps.setString(1, bookId);
+        int k = ps.executeUpdate();
+        if (k == 1) {
+            response = ResponseCode.SUCCESS.name();
         }
-        return response;
+    } catch (Exception e) {
+        response += " : " + e.getMessage();
+        e.printStackTrace();
     }
+    return response;
+    }
+
+    
 
     @Override
     public String addBook(Book book) throws StoreException {
-        String responseCode = ResponseCode.FAILURE.name();
-        Connection con = DBUtil.getConnection();
-        try {
-            PreparedStatement ps = con.prepareStatement(addBookQuery);
-            ps.setString(1, book.getBarcode());
-            ps.setString(2, book.getName());
-            ps.setString(3, book.getAuthor());
-            ps.setDouble(4, book.getPrice());
-            ps.setInt(5, book.getQuantity());
-            int k = ps.executeUpdate();
-            if (k == 1) {
-                responseCode = ResponseCode.SUCCESS.name();
-            }
-        } catch (Exception e) {
-            responseCode += " : " + e.getMessage();
-            e.printStackTrace();
+    String responseCode = ResponseCode.FAILURE.name();
+
+    try (Connection con = DBUtil.getConnection();
+         PreparedStatement ps = con.prepareStatement(addBookQuery)) {
+
+        ps.setString(1, book.getBarcode());
+        ps.setString(2, book.getName());
+        ps.setString(3, book.getAuthor());
+        ps.setDouble(4, book.getPrice());
+        ps.setInt(5, book.getQuantity());
+
+        int k = ps.executeUpdate();
+        if (k == 1) {
+            responseCode = ResponseCode.SUCCESS.name();
         }
-        return responseCode;
+    } catch (Exception e) {
+        responseCode += " : " + e.getMessage();
+        e.printStackTrace();
     }
 
-    @Override
-    public String updateBookQtyById(String bookId, int quantity) throws StoreException {
-        String responseCode = ResponseCode.FAILURE.name();
-        Connection con = DBUtil.getConnection();
-        try {
-            PreparedStatement ps = con.prepareStatement(updateBookQtyByIdQuery);
-            ps.setInt(1, quantity);
-            ps.setString(2, bookId);
-            ps.executeUpdate();
-            responseCode = ResponseCode.SUCCESS.name();
-        } catch (Exception e) {
-            responseCode += " : " + e.getMessage();
-            e.printStackTrace();
-        }
-        return responseCode;
+    return responseCode;
     }
+
+   @Override
+    public String updateBookQtyById(String bookId, int quantity) throws StoreException {
+    String responseCode = ResponseCode.FAILURE.name();
+
+    try (Connection con = DBUtil.getConnection();
+         PreparedStatement ps = con.prepareStatement(updateBookQtyByIdQuery)) {
+
+        ps.setInt(1, quantity);
+        ps.setString(2, bookId);
+        ps.executeUpdate();
+        responseCode = ResponseCode.SUCCESS.name();
+
+    } catch (Exception e) {
+        responseCode += " : " + e.getMessage();
+        e.printStackTrace();
+    }
+
+    return responseCode;
+    }
+
 
     @Override
     public List<Book> getBooksByCommaSeperatedBookIds(String commaSeperatedBookIds) throws StoreException {
-        List<Book> books = new ArrayList<Book>();
-        Connection con = DBUtil.getConnection();
-        try {
-            String getBooksByCommaSeperatedBookIdsQuery = "SELECT * FROM " + BooksDBConstants.TABLE_BOOK
-                    + " WHERE " +
-                    BooksDBConstants.COLUMN_BARCODE + " IN ( " + commaSeperatedBookIds + " )";
-            PreparedStatement ps = con.prepareStatement(getBooksByCommaSeperatedBookIdsQuery);
-            ResultSet rs = ps.executeQuery();
+    List<Book> books = new ArrayList<>();
+    String query = "SELECT * FROM " + BooksDBConstants.TABLE_BOOK +
+                   " WHERE " + BooksDBConstants.COLUMN_BARCODE + " IN ( " + commaSeperatedBookIds + " )";
 
-            while (rs.next()) {
-                String bCode = rs.getString(1);
-                String bName = rs.getString(2);
-                String bAuthor = rs.getString(3);
-                int bPrice = rs.getInt(4);
-                int bQty = rs.getInt(5);
+    try (Connection con = DBUtil.getConnection();
+         PreparedStatement ps = con.prepareStatement(query);
+         ResultSet rs = ps.executeQuery()) {
 
-                Book book = new Book(bCode, bName, bAuthor, bPrice, bQty);
-                books.add(book);
-            }
-        } catch (SQLException e) {
-
+        while (rs.next()) {
+            String bCode = rs.getString(1);
+            String bName = rs.getString(2);
+            String bAuthor = rs.getString(3);
+            int bPrice = rs.getInt(4);
+            int bQty = rs.getInt(5);
+            books.add(new Book(bCode, bName, bAuthor, bPrice, bQty));
         }
-        return books;
+
+    } catch (SQLException e) {
+        throw new StoreException("Failed to get books by IDs", e);
     }
+
+    return books;   
+    }
+
 
     @Override
     public String updateBook(Book book) throws StoreException {
-        String responseCode = ResponseCode.FAILURE.name();
-        Connection con = DBUtil.getConnection();
-        try {
-            PreparedStatement ps = con.prepareStatement(updateBookByIdQuery);
-            ps.setString(1, book.getName());
-            ps.setString(2, book.getAuthor());
-            ps.setDouble(3, book.getPrice());
-            ps.setInt(4, book.getQuantity());
-            ps.setString(5, book.getBarcode());
-            ps.executeUpdate();
-            responseCode = ResponseCode.SUCCESS.name();
-        } catch (Exception e) {
-            responseCode += " : " + e.getMessage();
-            e.printStackTrace();
-        }
-        return responseCode;
+    String responseCode = ResponseCode.FAILURE.name();
+    try (Connection con = DBUtil.getConnection();
+         PreparedStatement ps = con.prepareStatement(updateBookByIdQuery)) {
+         
+        ps.setString(1, book.getName());
+        ps.setString(2, book.getAuthor());
+        ps.setDouble(3, book.getPrice());
+        ps.setInt(4, book.getQuantity());
+        ps.setString(5, book.getBarcode());
+        
+        ps.executeUpdate();
+        responseCode = ResponseCode.SUCCESS.name();
+    } catch (Exception e) {
+        responseCode += " : " + e.getMessage();
+        e.printStackTrace();
     }
+    return responseCode;
+}
+
 
 }

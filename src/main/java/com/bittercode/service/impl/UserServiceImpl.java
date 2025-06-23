@@ -26,16 +26,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User login(UserRole role, String email, String password, HttpSession session) throws StoreException {
-        Connection con = DBUtil.getConnection();
-        PreparedStatement ps;
-        User user = null;
-        try {
-            String userType = UserRole.SELLER.equals(role) ? "1" : "2";
-            ps = con.prepareStatement(loginUserQuery);
-            ps.setString(1, email);
-            ps.setString(2, password);
-            ps.setString(3, userType);
-            ResultSet rs = ps.executeQuery();
+    User user = null;
+    try (Connection con = DBUtil.getConnection();
+         PreparedStatement ps = con.prepareStatement(loginUserQuery)) {
+        String userType = UserRole.SELLER.equals(role) ? "1" : "2";
+
+        ps.setString(1, email);
+        ps.setString(2, password);
+        ps.setString(3, userType);
+
+        try (ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {
                 user = new User();
                 user.setFirstName(rs.getString("firstName"));
@@ -45,11 +45,14 @@ public class UserServiceImpl implements UserService {
                 user.setPassword(password);
                 session.setAttribute(role.toString(), user.getEmailId());
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
-        return user;
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+    return user;
+    }
+
+
 
     @Override
     public boolean isLoggedIn(UserRole role, HttpSession session) {
@@ -66,33 +69,33 @@ public class UserServiceImpl implements UserService {
         return true;
     }
 
-    @Override
+   @Override
     public String register(UserRole role, User user) throws StoreException {
-        String responseMessage = ResponseCode.FAILURE.name();
-        Connection con = DBUtil.getConnection();
-        try {
-            PreparedStatement ps = con.prepareStatement(registerUserQuery);
-            ps.setString(1, user.getEmailId());
-            ps.setString(2, user.getPassword());
-            ps.setString(3, user.getFirstName());
-            ps.setString(4, user.getLastName());
-            ps.setString(5, user.getAddress());
-            ps.setLong(6, user.getPhone());
-            ps.setString(7, user.getEmailId());
-            int userType = UserRole.SELLER.equals(role) ? 1 : 2;
-            ps.setInt(8, userType);
-            int k = ps.executeUpdate();
-            if (k == 1) {
-                responseMessage = ResponseCode.SUCCESS.name();
-                ;
-            }
-        } catch (Exception e) {
-            responseMessage += " : " + e.getMessage();
-            if (responseMessage.contains("Duplicate"))
-                responseMessage = "User already registered with this email !!";
-            e.printStackTrace();
+    String responseMessage = ResponseCode.FAILURE.name();
+    try (Connection con = DBUtil.getConnection();
+         PreparedStatement ps = con.prepareStatement(registerUserQuery)) {
+
+        ps.setString(1, user.getEmailId());
+        ps.setString(2, user.getPassword());
+        ps.setString(3, user.getFirstName());
+        ps.setString(4, user.getLastName());
+        ps.setString(5, user.getAddress());
+        ps.setLong(6, user.getPhone());
+        ps.setString(7, user.getEmailId());
+        int userType = UserRole.SELLER.equals(role) ? 1 : 2;
+        ps.setInt(8, userType);
+        int k = ps.executeUpdate();
+        if (k == 1) {
+            responseMessage = ResponseCode.SUCCESS.name();
         }
-        return responseMessage;
+    } catch (Exception e) {
+        responseMessage += " : " + e.getMessage();
+        if (responseMessage.contains("Duplicate"))
+            responseMessage = "User already registered with this email !!";
+        e.printStackTrace();
     }
+    return responseMessage;
+}
+
 
 }
