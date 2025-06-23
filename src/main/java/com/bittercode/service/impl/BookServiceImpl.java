@@ -44,31 +44,31 @@ public class BookServiceImpl implements BookService {
     PreparedStatement ps = null;
     ResultSet rs = null;
 
-    try {
-        con = DBUtil.getConnection();
-        ps = con.prepareStatement(getBookByIdQuery);
-        ps.setString(1, bookId);
-        rs = ps.executeQuery();
+        try {
+            con = DBUtil.getConnection();
+            ps = con.prepareStatement(getBookByIdQuery);
+            ps.setString(1, bookId);
+            rs = ps.executeQuery();
 
-       while (rs.next()) {
-                String bCode = rs.getString(1);
-                String bName = rs.getString(2);
-                String bAuthor = rs.getString(3);
-                int bPrice = rs.getInt(4);
-                int bQty = rs.getInt(5);
+        while (rs.next()) {
+                    String bCode = rs.getString(1);
+                    String bName = rs.getString(2);
+                    String bAuthor = rs.getString(3);
+                    int bPrice = rs.getInt(4);
+                    int bQty = rs.getInt(5);
 
-                book = new Book(bCode, bName, bAuthor, bPrice, bQty);
-            }
-    } catch (SQLException e) {
-        throw new StoreException("Errore durante il recupero del libro", e);
-    } finally {
-        try { if (rs != null) rs.close(); } catch (SQLException ignored) {}
-        try { if (ps != null) ps.close(); } catch (SQLException ignored) {}
-        try { if (con != null) con.close(); } catch (SQLException ignored) {}
-    }
+                    book = new Book(bCode, bName, bAuthor, bPrice, bQty);
+                }
+        } catch (SQLException e) {
+            throw new StoreException("Errore durante il recupero del libro", e);
+        } finally {
+            try { if (rs != null) rs.close(); } catch (SQLException ignored) {}
+            try { if (ps != null) ps.close(); } catch (SQLException ignored) {}
+            try { if (con != null) con.close(); } catch (SQLException ignored) {}
+        }
 
-    return book;
-    }
+        return book;
+        }
 
 
     @Override
