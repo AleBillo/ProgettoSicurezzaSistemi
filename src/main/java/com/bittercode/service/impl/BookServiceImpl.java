@@ -56,7 +56,7 @@ public class BookServiceImpl implements BookService {
             }
         }
     } catch (SQLException e) {
-        throw new StoreException("Error while retrieving book by ID", e);
+        
     }
     return book;
     }
