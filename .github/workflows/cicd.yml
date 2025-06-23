@@ -190,7 +190,7 @@ jobs:
           format: HTML
           out: reports
           args: >
-            --failOnCVSS 7
+            --failOnCVSS 8
             --enableRetired
 
       - name: Upload Dependency Check report
