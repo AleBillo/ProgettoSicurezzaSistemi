@@ -173,7 +173,7 @@ public class BookServiceImpl implements BookService {
         }
 
     } catch (SQLException e) {
-        throw new StoreException("Failed to get books by IDs", e);
+        
     }
 
     return books;   
