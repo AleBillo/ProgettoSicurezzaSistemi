@@ -191,7 +191,6 @@ jobs:
           out: reports
           args: >
             --failOnCVSS 10
-  
 
       - name: Upload Dependency Check report
         if: always()
