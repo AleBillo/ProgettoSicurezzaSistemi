@@ -40,12 +40,10 @@ public class BookServiceImpl implements BookService {
     @Override
     public Book getBookById(String bookId) throws StoreException {
     Book book = null;
-
     try (Connection con = DBUtil.getConnection();
          PreparedStatement ps = con.prepareStatement(getBookByIdQuery)) {
-
+        
         ps.setString(1, bookId);
-
         try (ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {
                 String bCode = rs.getString(1);
@@ -57,13 +55,12 @@ public class BookServiceImpl implements BookService {
                 book = new Book(bCode, bName, bAuthor, bPrice, bQty);
             }
         }
-
     } catch (SQLException e) {
-       
+        throw new StoreException("Error while retrieving book by ID", e);
     }
-
     return book;
     }
+
 
     @Override
     public List<Book> getAllBooks() throws StoreException {
