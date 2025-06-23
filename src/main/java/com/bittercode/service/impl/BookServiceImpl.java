@@ -59,7 +59,7 @@ public class BookServiceImpl implements BookService {
         }
 
     } catch (SQLException e) {
-        throw new StoreException("Errore durante il recupero del libro con ID: " + bookId, e);
+       
     }
 
     return book;
